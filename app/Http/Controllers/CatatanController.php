@@ -28,17 +28,26 @@ class CatatanController extends Controller
 
     public function edit($id)
     {
-    $catatan = Catatan::findOrFail($id);
+        $catatan = Catatan::findOrFail($id);
 
-    return view('catatan.edit', compact('catatan'));
+        return view('catatan.edit', compact('catatan'));
     }
 
     public function update(Request $request, $id)
     {
-    $catatan = Catatan::findOrFail($id);
-    $catatan->update($request->only(['judul', 'isi']));
+        $validated = $request->validate([
+            'judul' => 'required|max:255',
+            'isi' => 'required',
+        ], [
+            'judul.required' => 'Judul wajib diisi.',
+            'judul.max' => 'Judul maksimal 255 karakter.',
+            'isi.required' => 'Isi catatan tidak boleh kosong.',
+        ]);
 
-    return redirect("/catatan/{$id}")->with('sukses', 'Catatan berhasil diperbarui!');
+        $catatan = Catatan::findOrFail($id);
+        $catatan->update($validated);
+
+        return redirect("/catatan/{$id}")->with('sukses', 'Catatan berhasil diperbarui!');
     }
 
     public function store(Request $request)
@@ -46,10 +55,22 @@ class CatatanController extends Controller
         $validated = $request->validate([
             'judul' => 'required|max:255',
             'isi' => 'required',
+        ], [
+            'judul.required' => 'Judul wajib diisi.',
+            'judul.max' => 'Judul maksimal 255 karakter.',
+            'isi.required' => 'Isi catatan tidak boleh kosong.',
         ]);
 
         Catatan::create($validated);
 
         return redirect('/catatan')->with('sukses', 'Catatan berhasil disimpan!');
+    }
+
+    public function destroy($id)
+    {
+        $catatan = Catatan::findOrFail($id);
+        $catatan->delete();
+
+        return redirect('/catatan')->with('sukses', 'Catatan berhasil dihapus.');
     }
 }

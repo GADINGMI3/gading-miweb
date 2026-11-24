@@ -8,19 +8,32 @@
         <div class="card">
             <div class="card-header">Edit Catatan</div>
             <div class="card-body">
+                @if($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 <form method="POST" action="/catatan/{{ $catatan->id }}">
                     @csrf
                     @method('PUT')
 
                     <div class="mb-3">
                         <label for="judul" class="form-label">Judul</label>
-                        <input type="text" name="judul" id="judul" class="form-control"
-                               value="{{ old('judul', $catatan->judul) }}" required>
+                        <input type="text" name="judul" id="judul"
+                               class="form-control @error('judul') is-invalid @enderror"
+                               value="{{ old('judul', $catatan->judul) }}">
                     </div>
 
                     <div class="mb-3">
                         <label for="isi" class="form-label">Isi Catatan</label>
-                        <textarea name="isi" id="isi" class="form-control" rows="5" required>{{ old('isi', $catatan->isi) }}</textarea>
+                        <textarea name="isi" id="isi"
+                                  class="form-control @error('isi') is-invalid @enderror"
+                                  rows="5">{{ old('isi', $catatan->isi) }}</textarea>
                     </div>
 
                     <div class="d-grid">

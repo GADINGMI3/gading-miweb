@@ -12,10 +12,6 @@
     </div>
 </div>
 
-@if(session('sukses'))
-    <div class="alert alert-success">{{ session('sukses') }}</div>
-@endif
-
 @if($catatan->count() > 0)
     <div class="row">
         @foreach($catatan as $item)
@@ -29,10 +25,13 @@
                         <p class="card-text">{{ Str::limit($item->isi, 100) }}</p>
                         <a href="/catatan/{{ $item->id }}" class="btn btn-sm btn-outline-primary">Lihat</a>
                         <a href="#" class="btn btn-sm btn-outline-warning">Edit</a>
-                        <form action="#" method="POST" class="d-inline">
+                        <form action="/catatan/{{ $item->id }}" method="POST" class="d-inline">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Yakin?')">Hapus</button>
+                            <button type="submit" class="btn btn-sm btn-outline-danger"
+                                    onclick="return confirm('Yakin hapus catatan ini?')">
+                                Hapus
+                            </button>
                         </form>
                     </div>
                 </div>
